@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050505">
+<title>Walk of Faith</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#050505;--card:#111;--gold:#e6a82f;--text:#fff;--muted:#c8c8c8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{text-align:center;padding:24px 18px 8px}.logo{width:150px;height:150px;object-fit:contain}
+h1{color:var(--gold);margin:8px 0 3px}.sub{color:var(--muted);margin:0}
+main{max-width:760px;margin:auto;padding:18px}.nav{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button,.btn{border:1px solid var(--gold);background:var(--card);color:var(--gold);padding:15px;border-radius:14px;font-weight:700;cursor:pointer}
+.card{background:var(--card);border:1px solid #2b2b2b;border-radius:18px;padding:20px;margin-top:16px}
+h2{color:var(--gold)}label{display:block;margin:12px 0 5px;color:var(--muted)}
+input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #555;background:#080808;color:#fff}
+textarea{min-height:130px}.hidden{display:none}.answers{display:grid;gap:9px}.answers button{text-align:left}
+.good{color:#8fe58f}.bad{color:#ff9292}.sermon{border-top:1px solid #333;padding:12px 0}
+footer{text-align:center;color:#999;padding:30px}
+@media(max-width:520px){.nav{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<img class="logo" src="assets/walk-of-faith-logo.png" alt="Walk of Faith logo">
+<h1>Walk of Faith</h1><p class="sub">Minister Roshelle Crummie</p>
+</header>
+<main>
+<div class="nav">
+<button onclick="show('devotional')">Devotional Message</button>
+<button onclick="show('quiz')">Bible Quiz of the Day</button>
+<button onclick="show('message')">Message Minister Crummie</button>
+<button onclick="unlockSermons()">Private Sermon Organizer</button>
+</div>
+
+<section id="devotional" class="card">
+<h2>Devotional Message</h2>
+<h3>Keep Walking by Faith</h3>
+<p><b>Scripture:</b> “For we walk by faith, not by sight.” — 2 Corinthians 5:7</p>
+<p>There will be days when you cannot see the whole road ahead. Faith keeps moving because God is faithful even when the next step is unclear.</p>
+</section>
+
+<section id="quiz" class="card hidden">
+<h2>Bible Quiz of the Day</h2>
+<p id="q"></p><div id="answers" class="answers"></div><p id="result"></p>
+</section>
+
+<section id="message" class="card hidden">
+<h2>Message Minister Crummie</h2>
+<p>Your message will open in your email app addressed to the Walk of Faith ministry email.</p>
+<label>Name</label><input id="name">
+<label>Your Email</label><input id="email" type="email">
+<label>Message or Prayer Request</label><textarea id="msg"></textarea>
+<button onclick="sendMessage()">Send Message</button>
+</section>
+
+<section id="sermons" class="card hidden">
+<h2>Private Sermon Organizer</h2>
+<label>Sermon Title</label><input id="stitle">
+<label>Scripture Text</label><input id="stext">
+<label>Sermon Type</label><select id="stype"><option>Evangelistic</option><option>Expository</option><option>Topical</option><option>Funeral</option><option>Anniversary</option><option>Other</option></select>
+<label>Sermon Notes / Points</label><textarea id="snotes"></textarea>
+<label>Date Preached</label><input id="sdate" type="date">
+<button onclick="saveSermon()">Save Sermon</button>
+<label>Search Sermons</label><input id="search" oninput="renderSermons()" placeholder="Acts 8, grace, evangelistic...">
+<div id="sermonList"></div>
+</section>
+</main>
+<footer>Walk of Faith • Minister Roshelle Crummie</footer>
+<script>
+const sections=['devotional','quiz','message','sermons'];
+function show(id){sections.forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id))}
+const quizzes=[
+{q:"Who preached on the Day of Pentecost?",a:["Paul","Peter","Philip","Stephen"],c:1,r:"Acts 2"},
+{q:"Who was the first Christian martyr recorded in Acts?",a:["Stephen","Barnabas","James","Philip"],c:0,r:"Acts 7"},
+{q:"In Acts 8, who preached in Samaria?",a:["Peter","John","Philip","Paul"],c:2,r:"Acts 8"}
+];
+function dailyQuiz(){let d=new Date(),i=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%quizzes.length,x=quizzes[i];q.textContent=x.q;answers.innerHTML='';result.textContent='';x.a.forEach((v,n)=>{let b=document.createElement('button');b.textContent=String.fromCharCode(65+n)+". "+v;b.onclick=()=>{result.className=n===x.c?'good':'bad';result.textContent=(n===x.c?'Correct! ':'Not quite. ')+"Read "+x.r+".";};answers.appendChild(b)})}
+dailyQuiz();
+function sendMessage(){let n=name.value.trim(),e=email.value.trim(),m=msg.value.trim();if(!n||!e||!m){alert("Please complete your name, email, and message.");return}let subject=encodeURIComponent("Walk of Faith App Message from "+n),body=encodeURIComponent("Name: "+n+"\nEmail: "+e+"\n\nMessage / Prayer Request:\n"+m);location.href="mailto:walkoffaith51@gmail.com?subject="+subject+"&body="+body}
+function unlockSermons(){let pin=prompt("Enter your private sermon PIN:");let saved=localStorage.getItem("wof_pin");if(!saved){let p=prompt("Create a private sermon PIN:");if(!p)return;localStorage.setItem("wof_pin",p);saved=p}if(pin===saved){show('sermons');renderSermons()}else alert("Incorrect PIN.")}
+function sermons(){return JSON.parse(localStorage.getItem("wof_sermons")||"[]")}
+function saveSermon(){let x={id:Date.now(),title:stitle.value,text:stext.value,type:stype.value,notes:snotes.value,date:sdate.value};if(!x.title){alert("Add a sermon title.");return}let a=sermons();a.unshift(x);localStorage.setItem("wof_sermons",JSON.stringify(a));stitle.value=stext.value=snotes.value=sdate.value='';renderSermons()}
+function del(id){if(confirm("Delete this sermon?")){localStorage.setItem("wof_sermons",JSON.stringify(sermons().filter(x=>x.id!==id)));renderSermons()}}
+function renderSermons(){let term=(search.value||'').toLowerCase();let a=sermons().filter(x=>JSON.stringify(x).toLowerCase().includes(term));sermonList.innerHTML=a.length?'':'<p>No sermons saved yet.</p>';a.forEach(x=>{let d=document.createElement('div');d.className='sermon';d.innerHTML=`<h3>${esc(x.title)}</h3><p><b>${esc(x.text)}</b> • ${esc(x.type)} ${x.date?'• '+esc(x.date):''}</p><p>${esc(x.notes).replace(/\n/g,'<br>')}</p><button onclick="del(${x.id})">Delete</button>`;sermonList.appendChild(d)})}
+function esc(s=''){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+</body></html>

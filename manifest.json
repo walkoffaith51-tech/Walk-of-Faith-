@@ -1,0 +1,15 @@
+{
+  "name": "Walk of Faith - Minister Roshelle Crummie",
+  "short_name": "Walk of Faith",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "assets/walk-of-faith-logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}
