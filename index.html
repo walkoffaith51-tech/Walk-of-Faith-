@@ -21,12 +21,12 @@ button{cursor:pointer}.send,.answer{border:1px solid var(--gold);background:#151
 footer{max-width:850px;margin:18px auto 0;padding:22px;text-align:center;border-top:1px solid #e6a82f73;color:#aaa}.contact{color:#fff}.contact b{color:var(--gold)}
 @media(max-width:680px){.grid,.widegrid{grid-template-columns:1fr}.tile{min-height:185px}h1{font-size:28px}.welcome{font-size:26px}.date{float:none;display:inline-block}.logo{width:145px;height:145px}}
 </style></head><body>
-<header><img class="logo" src="walk-of-faith-logo.png" alt="Walk of Faith logo"><div class="welcome">Welcome to</div><h1>WALK OF FAITH</h1><></header>
+<header><img class="logo" src="walk-of-faith-logo.png" alt="Walk of Faith logo"><div class="welcome">Welcome to</div><h1>WALK OF FAITH</h1></header>
 <main><section class="card hero"><span class="date" id="todayDate"></span><div class="eyebrow">DAILY DEVOTIONAL</div><h2 id="devTitle"></h2><p id="devText"></p><p class="scripture" id="devVerse"></p></section>
 <div class="grid">
 <section class="card tile" onclick="show('quiz')"><div class="icon">📖</div><h3>BIBLE QUIZ</h3><div class="gold">OF THE DAY</div><p>Test your knowledge of God's Word</p><button class="arrow">›</button></section>
 <section class="card tile" onclick="show('message')"><div class="icon">🙏🏾</div><h3>MESSAGE</h3><div class="gold">MINISTER CRUMMIE</div><p>Send a prayer request or leave a message</p><button class="arrow">›</button></section>
-<section class="card tile" onclick="show('scripture')"><div class="icon">✝</div><h3>TODAY'S</h3><div class="gold">SCRIPTURE</div><p>A daily dose of God's Word</p><button class="arrow">›</button></section></div>
+<section class="card tile" onclick="show('scripture')"><div class="icon">&#10013;</div><h3>TODAY'S</h3><div class="gold">SCRIPTURE</div><p>A daily dose of God's Word</p><button class="arrow">›</button></section></div>
 <div class="widegrid"><section class="card wide" onclick="show('message')"><h3>🙏🏾 PRAYER REQUEST</h3><p>Let us join you in prayer. We are here for you.</p><button class="arrow">›</button></section><section class="card wide" onclick="show('about')"><h3>ABOUT <span class="gold">WALK OF FAITH</span></h3><p>Learn more about the ministry and Minister Roshelle Crummie.</p><button class="arrow">›</button></section></div>
 <section id="quiz" class="card section hidden"><h2>Bible Quiz of the Day</h2><p id="q"></p><div id="answers" class="answers"></div><p id="result"></p></section>
 <section id="message" class="card section hidden"><h2>Message Minister Crummie</h2><p>Your message will open in your email app addressed to Walk of Faith.</p><label>Name</label><input id="name"><label>Your Email</label><input id="email" type="email"><label>Message or Prayer Request</label><textarea id="msg"></textarea><button class="send" onclick="sendMessage()">Send Message</button></section>
