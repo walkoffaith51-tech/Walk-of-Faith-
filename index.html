@@ -2,89 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#050505">
-<title>Walk of Faith</title>
+<meta name="theme-color" content="#050505"><title>Walk of Faith</title>
 <link rel="manifest" href="manifest.json">
 <style>
-:root{--bg:#050505;--card:#111;--gold:#e6a82f;--text:#fff;--muted:#c8c8c8}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{text-align:center;padding:24px 18px 8px}.logo{width:150px;height:150px;object-fit:contain}
-h1{color:var(--gold);margin:8px 0 3px}.sub{color:var(--muted);margin:0}
-main{max-width:760px;margin:auto;padding:18px}.nav{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-button,.btn{border:1px solid var(--gold);background:var(--card);color:var(--gold);padding:15px;border-radius:14px;font-weight:700;cursor:pointer}
-.card{background:var(--card);border:1px solid #2b2b2b;border-radius:18px;padding:20px;margin-top:16px}
-h2{color:var(--gold)}label{display:block;margin:12px 0 5px;color:var(--muted)}
-input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #555;background:#080808;color:#fff}
-textarea{min-height:130px}.hidden{display:none}.answers{display:grid;gap:9px}.answers button{text-align:left}
-.good{color:#8fe58f}.bad{color:#ff9292}.sermon{border-top:1px solid #333;padding:12px 0}
-footer{text-align:center;color:#999;padding:30px}
-@media(max-width:520px){.nav{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<header>
-<img class="logo" src="walk-of-faith-logo.png" alt="Walk of Faith logo">
-<h1>Walk of Faith</h1><p class="sub">Minister Roshelle Crummie</p>
-</header>
-<main>
-<div class="nav">
-<button onclick="show('devotional')">Devotional Message</button>
-<button onclick="show('quiz')">Bible Quiz of the Day</button>
-<button onclick="show('message')">Message Minister Crummie</button>
-<button onclick="unlockSermons()">Private Sermon Organizer</button>
-</div>
-
-<section id="devotional" class="card">
-<h2>Devotional Message</h2>
-<h3>Keep Walking by Faith</h3>
-<p><b>Scripture:</b> “For we walk by faith, not by sight.” — 2 Corinthians 5:7</p>
-<p>There will be days when you cannot see the whole road ahead. Faith keeps moving because God is faithful even when the next step is unclear.</p>
-</section>
-
-<section id="quiz" class="card hidden">
-<h2>Bible Quiz of the Day</h2>
-<p id="q"></p><div id="answers" class="answers"></div><p id="result"></p>
-</section>
-
-<section id="message" class="card hidden">
-<h2>Message Minister Crummie</h2>
-<p>Your message will open in your email app addressed to the Walk of Faith ministry email.</p>
-<label>Name</label><input id="name">
-<label>Your Email</label><input id="email" type="email">
-<label>Message or Prayer Request</label><textarea id="msg"></textarea>
-<button onclick="sendMessage()">Send Message</button>
-</section>
-
-<section id="sermons" class="card hidden">
-<h2>Private Sermon Organizer</h2>
-<label>Sermon Title</label><input id="stitle">
-<label>Scripture Text</label><input id="stext">
-<label>Sermon Type</label><select id="stype"><option>Evangelistic</option><option>Expository</option><option>Topical</option><option>Funeral</option><option>Anniversary</option><option>Other</option></select>
-<label>Sermon Notes / Points</label><textarea id="snotes"></textarea>
-<label>Date Preached</label><input id="sdate" type="date">
-<button onclick="saveSermon()">Save Sermon</button>
-<label>Search Sermons</label><input id="search" oninput="renderSermons()" placeholder="Acts 8, grace, evangelistic...">
-<div id="sermonList"></div>
-</section>
-</main>
-<footer>Walk of Faith • Minister Roshelle Crummie</footer>
+:root{--gold:#e6a82f;--gold2:#ffd86a;--muted:#d0d0d0}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 7%,#3b2705 0,#0b0905 20%,#050505 44%);color:#fff;font-family:Arial,sans-serif;min-height:100vh}
+body:before{content:"✝";position:fixed;right:7%;top:7%;font-size:110px;color:rgba(230,168,47,.11);text-shadow:0 0 35px rgba(230,168,47,.35);z-index:-1}
+header{text-align:center;padding:28px 18px 12px}.logo{width:165px;height:165px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(230,168,47,.55))}
+.welcome{font:italic 30px Georgia,serif;color:var(--gold2)}h1{font:700 34px Georgia,serif;letter-spacing:3px;margin:0}.tag{color:var(--gold);letter-spacing:3px;font-weight:700}
+main{max-width:850px;margin:auto;padding:18px}.card{background:linear-gradient(145deg,rgba(28,28,25,.96),rgba(8,8,8,.97));border:1px solid rgba(230,168,47,.65);border-radius:26px;padding:22px;box-shadow:0 12px 30px #0008,inset 0 1px #ffffff0a}
+.hero{margin-bottom:18px}.eyebrow,.gold,.scripture{color:var(--gold2)}.date{float:right;border:1px solid var(--gold);padding:8px 12px;border-radius:20px}
+h2,h3{font-family:Georgia,serif}h2{font-size:29px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.tile{text-align:center;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
+.icon{width:74px;height:74px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:34px;box-shadow:0 0 18px #e6a82f33}.tile p{color:var(--muted);line-height:1.45}
+.arrow{margin-top:auto;background:linear-gradient(90deg,#a66d0b,var(--gold2));color:#111;border:0;border-radius:20px;padding:8px 20px;font-weight:bold}
+.widegrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.wide{cursor:pointer;min-height:150px}.section{margin-top:18px}.hidden{display:none}
+label{display:block;margin:12px 0 5px;color:var(--muted)}input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #6c5624;background:#080808;color:#fff}textarea{min-height:130px}
+button{cursor:pointer}.send,.answer{border:1px solid var(--gold);background:#15130e;color:var(--gold2);padding:13px 16px;border-radius:13px;font-weight:700}.answers{display:grid;gap:10px}.answer{text-align:left}.good{color:#8fe58f}.bad{color:#ff9292}
+footer{max-width:850px;margin:18px auto 0;padding:22px;text-align:center;border-top:1px solid #e6a82f73;color:#aaa}.contact{color:#fff}.contact b{color:var(--gold)}
+@media(max-width:680px){.grid,.widegrid{grid-template-columns:1fr}.tile{min-height:185px}h1{font-size:28px}.welcome{font-size:26px}.date{float:none;display:inline-block}.logo{width:145px;height:145px}}
+</style></head><body>
+<header><img class="logo" src="walk-of-faith-logo.png" alt="Walk of Faith logo"><div class="welcome">Welcome to</div><h1>WALK OF FAITH</h1><p class="tag">FAITH • PRAYER • THE WORD</p></header>
+<main><section class="card hero"><span class="date" id="todayDate"></span><div class="eyebrow">DAILY DEVOTIONAL</div><h2 id="devTitle"></h2><p id="devText"></p><p class="scripture" id="devVerse"></p></section>
+<div class="grid">
+<section class="card tile" onclick="show('quiz')"><div class="icon">📖</div><h3>BIBLE QUIZ</h3><div class="gold">OF THE DAY</div><p>Test your knowledge of God's Word</p><button class="arrow">›</button></section>
+<section class="card tile" onclick="show('message')"><div class="icon">🙏🏾</div><h3>MESSAGE</h3><div class="gold">MINISTER CRUMMIE</div><p>Send a prayer request or leave a message</p><button class="arrow">›</button></section>
+<section class="card tile" onclick="show('scripture')"><div class="icon">✝</div><h3>TODAY'S</h3><div class="gold">SCRIPTURE</div><p>A daily dose of God's Word</p><button class="arrow">›</button></section></div>
+<div class="widegrid"><section class="card wide" onclick="show('message')"><h3>🙏🏾 PRAYER REQUEST</h3><p>Let us join you in prayer. We are here for you.</p><button class="arrow">›</button></section><section class="card wide" onclick="show('about')"><h3>ABOUT <span class="gold">WALK OF FAITH</span></h3><p>Learn more about the ministry and Minister Roshelle Crummie.</p><button class="arrow">›</button></section></div>
+<section id="quiz" class="card section hidden"><h2>Bible Quiz of the Day</h2><p id="q"></p><div id="answers" class="answers"></div><p id="result"></p></section>
+<section id="message" class="card section hidden"><h2>Message Minister Crummie</h2><p>Your message will open in your email app addressed to Walk of Faith.</p><label>Name</label><input id="name"><label>Your Email</label><input id="email" type="email"><label>Message or Prayer Request</label><textarea id="msg"></textarea><button class="send" onclick="sendMessage()">Send Message</button></section>
+<section id="scripture" class="card section hidden"><h2>Today's Scripture</h2><p class="scripture" id="todayVerse"></p><p id="todayThought"></p></section>
+<section id="about" class="card section hidden"><h2>About Walk of Faith</h2><p>Walk of Faith is a Christ-centered ministry focused on faith, prayer, and obedience to God's Word, encouraging believers to walk faithfully with Christ in every season of life.</p><p><b>Minister Roshelle Crummie</b></p></section></main>
+<footer><div class="contact"><b>CONTACT</b><br>walkoffaith51@gmail.com</div><p>Making Faith a Daily Walk</p><p>© <span id="year"></span> Walk of Faith Ministry</p></footer>
 <script>
-const sections=['devotional','quiz','message','sermons'];
-function show(id){sections.forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id))}
+const devotionals=[
+["Keep Walking by Faith","There will be days when you cannot see the whole road ahead. Faith keeps moving because God is faithful even when the next step is unclear.","2 Corinthians 5:7"],
+["God Will Make a Way","When there seems to be no way, remember that God is already at work. Trust His direction and keep moving in faith.","Isaiah 43:19"],
+["Strength for Today","You do not have to carry tomorrow today. God's grace is present for this moment, and His strength is enough.","2 Corinthians 12:9"],
+["The Lord Is Near","God is not distant from the brokenhearted. In the quiet and in the pain, His presence is closer than you think.","Psalm 34:18"],
+["Trust the Lord","Understanding has limits, but God's wisdom does not. Place your way in His hands and allow Him to direct your path.","Proverbs 3:5-6"],
+["Grace Is Sufficient","Your weakness does not cancel God's purpose. His grace meets you where your strength ends.","2 Corinthians 12:9"],
+["Be Still","Not every battle is won by moving faster. Sometimes faith stands still long enough to remember who God is.","Psalm 46:10"],
+["A New Morning","Yesterday does not own today. God's mercy meets you again this morning with fresh compassion.","Lamentations 3:22-23"],
+["Do Not Fear","Fear may speak loudly, but God has not left you alone. His presence is your help and His hand will uphold you.","Isaiah 41:10"],
+["Cast Your Care","Prayer is where we release what we were never meant to carry alone. Give your cares to God because He cares for you.","1 Peter 5:7"],
+["Wait on the Lord","Waiting is not wasted when God is working. He renews the strength of those who place their hope in Him.","Isaiah 40:31"],
+["God Is Faithful","Circumstances can change, people can change, but the faithfulness of God remains.","1 Corinthians 1:9"],
+["Walk in the Light","God calls us out of darkness and into a life shaped by truth. Take the next step in the light He has given you.","1 John 1:7"],
+["Peace in the Storm","The presence of a storm does not mean the absence of Christ. His peace can guard your heart.","Philippians 4:7"],
+["Seek Him First","Before the schedule, the worry, and the noise, turn your heart toward God and put His kingdom first.","Matthew 6:33"],
+["The Good Shepherd","You are not wandering without a Shepherd. The Lord leads, restores, and stays with His people through every valley.","Psalm 23:1-4"],
+["Pray Without Ceasing","Prayer is more than a moment; it is a life that keeps turning toward God. Talk to Him throughout your day.","1 Thessalonians 5:17"],
+["More Than Conquerors","The love of Christ holds you through every trial. Your struggle does not have the final word—God does.","Romans 8:37"],
+["A Firm Foundation","Build your life on the words of Christ. Storms will come, but a life founded on Him can stand.","Matthew 7:24-25"],
+["God Hears You","Your prayer is not lost in the air. The Lord hears the cry of His people and invites us to call on Him.","Jeremiah 33:3"],
+["Renew Your Mind","Do not let the world shape every thought. Let God's truth renew your mind and transform the way you live.","Romans 12:2"],
+["Joy Comes","Weeping may visit for a night, but it does not stay forever. Keep trusting God through the night.","Psalm 30:5"],
+["Love One Another","The world should recognize Christ's disciples by the way we love. Let grace shape how you treat people today.","John 13:34-35"],
+["The Battle Is the Lord's","Some battles are bigger than your ability, but none are bigger than God. Stand in faith and trust His power.","2 Chronicles 20:15"],
+["Come Unto Me","Jesus invites the weary to come, not to pretend. Bring Him the weight and receive the rest only He can give.","Matthew 11:28"],
+["Faith Over Sight","What you see is not all God is doing. Faith trusts His character when the full picture has not yet appeared.","Hebrews 11:1"],
+["His Word Stands","Trends pass and opinions shift, but the Word of our God stands forever. Anchor your heart in lasting truth.","Isaiah 40:8"],
+["Serve the Lord","Whatever God places in your hands today, do it with a heart that honors Him. Faithfulness matters.","Colossians 3:23"],
+["God Gives Wisdom","You do not have to pretend to know every answer. Ask God for wisdom and trust Him to guide you.","James 1:5"],
+["Finish the Race","Do not let a hard mile make you forget the finish. Keep the faith, keep moving, and keep your eyes on Christ.","2 Timothy 4:7"]];
 const quizzes=[
-{q:"Who preached on the Day of Pentecost?",a:["Paul","Peter","Philip","Stephen"],c:1,r:"Acts 2"},
-{q:"Who was the first Christian martyr recorded in Acts?",a:["Stephen","Barnabas","James","Philip"],c:0,r:"Acts 7"},
-{q:"In Acts 8, who preached in Samaria?",a:["Peter","John","Philip","Paul"],c:2,r:"Acts 8"}
-];
-function dailyQuiz(){let d=new Date(),i=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%quizzes.length,x=quizzes[i];q.textContent=x.q;answers.innerHTML='';result.textContent='';x.a.forEach((v,n)=>{let b=document.createElement('button');b.textContent=String.fromCharCode(65+n)+". "+v;b.onclick=()=>{result.className=n===x.c?'good':'bad';result.textContent=(n===x.c?'Correct! ':'Not quite. ')+"Read "+x.r+".";};answers.appendChild(b)})}
-dailyQuiz();
-function sendMessage(){let n=name.value.trim(),e=email.value.trim(),m=msg.value.trim();if(!n||!e||!m){alert("Please complete your name, email, and message.");return}let subject=encodeURIComponent("Walk of Faith App Message from "+n),body=encodeURIComponent("Name: "+n+"\nEmail: "+e+"\n\nMessage / Prayer Request:\n"+m);location.href="mailto:walkoffaith51@gmail.com?subject="+subject+"&body="+body}
-function unlockSermons(){let pin=prompt("Enter your private sermon PIN:");let saved=localStorage.getItem("wof_pin");if(!saved){let p=prompt("Create a private sermon PIN:");if(!p)return;localStorage.setItem("wof_pin",p);saved=p}if(pin===saved){show('sermons');renderSermons()}else alert("Incorrect PIN.")}
-function sermons(){return JSON.parse(localStorage.getItem("wof_sermons")||"[]")}
-function saveSermon(){let x={id:Date.now(),title:stitle.value,text:stext.value,type:stype.value,notes:snotes.value,date:sdate.value};if(!x.title){alert("Add a sermon title.");return}let a=sermons();a.unshift(x);localStorage.setItem("wof_sermons",JSON.stringify(a));stitle.value=stext.value=snotes.value=sdate.value='';renderSermons()}
-function del(id){if(confirm("Delete this sermon?")){localStorage.setItem("wof_sermons",JSON.stringify(sermons().filter(x=>x.id!==id)));renderSermons()}}
-function renderSermons(){let term=(search.value||'').toLowerCase();let a=sermons().filter(x=>JSON.stringify(x).toLowerCase().includes(term));sermonList.innerHTML=a.length?'':'<p>No sermons saved yet.</p>';a.forEach(x=>{let d=document.createElement('div');d.className='sermon';d.innerHTML=`<h3>${esc(x.title)}</h3><p><b>${esc(x.text)}</b> • ${esc(x.type)} ${x.date?'• '+esc(x.date):''}</p><p>${esc(x.notes).replace(/\n/g,'<br>')}</p><button onclick="del(${x.id})">Delete</button>`;sermonList.appendChild(d)})}
-function esc(s=''){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
-</script>
-</body></html>
+["Who preached on the Day of Pentecost?",["Paul","Peter","Philip","Stephen"],1,"Acts 2"],
+["Who was the first Christian martyr recorded in Acts?",["Stephen","Barnabas","James","Philip"],0,"Acts 7"],
+["In Acts 8, who preached in Samaria?",["Peter","John","Philip","Paul"],2,"Acts 8"],
+["Who built the ark?",["Moses","Noah","Abraham","David"],1,"Genesis 6"],
+["Who defeated Goliath?",["Saul","Samuel","David","Jonathan"],2,"1 Samuel 17"],
+["Who was swallowed by a great fish?",["Jonah","Elijah","Elisha","Isaiah"],0,"Jonah 1"],
+["Who led Israel out of Egypt?",["Aaron","Joshua","Moses","Joseph"],2,"Exodus"],
+["What is the first book of the Bible?",["Exodus","Genesis","Matthew","Psalms"],1,"Genesis"],
+["Who baptized Jesus?",["Peter","John the Baptist","James","Andrew"],1,"Matthew 3"],
+["Who climbed a tree to see Jesus?",["Zacchaeus","Nicodemus","Bartimaeus","Thomas"],0,"Luke 19"],
+["Who interpreted Pharaoh's dreams?",["Daniel","Joseph","Moses","Jacob"],1,"Genesis 41"],
+["Who was known for great strength?",["Samson","Solomon","Saul","Samuel"],0,"Judges 13-16"],
+["Who denied Jesus three times?",["John","Judas","Peter","Thomas"],2,"Luke 22"],
+["Who wrote many of the Psalms?",["David","Paul","Luke","Peter"],0,"Psalms"],
+["What city did Joshua march around?",["Jerusalem","Jericho","Bethlehem","Nazareth"],1,"Joshua 6"],
+["Who was thrown into the lions' den?",["Daniel","David","Elijah","Paul"],0,"Daniel 6"],
+["Who was the mother of Jesus?",["Martha","Mary","Elizabeth","Ruth"],1,"Luke 1"],
+["What did Jesus turn water into?",["Oil","Milk","Wine","Honey"],2,"John 2"],
+["Who betrayed Jesus?",["Peter","Judas Iscariot","Thomas","Matthew"],1,"Matthew 26"],
+["Who was the wisest king of Israel?",["David","Saul","Solomon","Hezekiah"],2,"1 Kings 3"],
+["On what day did God rest from creation?",["First","Third","Sixth","Seventh"],3,"Genesis 2"],
+["Who saw a burning bush?",["Moses","Abraham","Isaac","Joshua"],0,"Exodus 3"],
+["Who was Ruth's mother-in-law?",["Naomi","Esther","Deborah","Hannah"],0,"Ruth 1"],
+["Who was raised from the dead after four days?",["Stephen","Lazarus","Jairus","Eutychus"],1,"John 11"],
+["What is the last book of the Bible?",["Jude","Acts","Revelation","Romans"],2,"Revelation"],
+["Who wrote many New Testament letters?",["Paul","Philip","Andrew","Thomas"],0,"New Testament Epistles"],
+["Who was the father of John the Baptist?",["Joseph","Zacharias","Simeon","Cornelius"],1,"Luke 1"],
+["How many disciples did Jesus choose?",["7","10","12","40"],2,"Matthew 10"],
+["Who said, 'Here am I; send me'?",["Jeremiah","Isaiah","Ezekiel","Daniel"],1,"Isaiah 6"],
+["Who met Jesus at night to ask questions?",["Nicodemus","Zacchaeus","Cornelius","Barnabas"],0,"John 3"]];
+const day=Math.floor(new Date().setHours(0,0,0,0)/86400000),d=devotionals[day%devotionals.length],z=quizzes[day%quizzes.length];
+todayDate.textContent=new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});devTitle.textContent=d[0];devText.textContent=d[1];devVerse.textContent=d[2];todayVerse.textContent=d[2];todayThought.textContent=d[1];year.textContent=new Date().getFullYear();q.textContent=z[0];
+z[1].forEach((v,n)=>{let b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+n)+". "+v;b.onclick=()=>{result.className=n===z[2]?"good":"bad";result.textContent=(n===z[2]?"Correct! ":"Not quite. ")+"Read "+z[3]+".";};answers.appendChild(b)});
+function show(id){["quiz","message","scripture","about"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));document.getElementById(id).scrollIntoView({behavior:"smooth"})}
+function sendMessage(){let n=name.value.trim(),e=email.value.trim(),m=msg.value.trim();if(!n||!e||!m){alert("Please complete your name, email, and message.");return}location.href="mailto:walkoffaith51@gmail.com?subject="+encodeURIComponent("Walk of Faith App Message from "+n)+"&body="+encodeURIComponent("Name: "+n+"\nEmail: "+e+"\n\nMessage / Prayer Request:\n"+m)}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+</script></body></html>
